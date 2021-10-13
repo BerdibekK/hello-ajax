@@ -1,2 +1,2 @@
 # hello-ajax
-simple ajax table used bootstrap
+simple PHP PDO AJAX TABLE boostrap
