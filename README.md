@@ -1,2 +1,2 @@
 # hello-ajax
-simple ajax table
+simple ajax table used bootstrap
