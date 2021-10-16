@@ -1,10 +1,15 @@
 <?php
+//LOGGER
+ini_set('display_errors',1);
+ini_set('log_errors',1);
+ini_set('error_log', dirname(__FILE__) . "/log.txt");
+
   Class Model{
 
-    private $server="YOUR_SERVER:PORT";
-    private $username = "USERNAME";
-    private $password = "PASSWORD%";
-    private $db = "YOUR_DB";
+    private $server="srv-pleskdb33.ps.kz:3306";
+    private $username = "itrender_root";
+    private $password = "Tdau739%";
+    private $db = "itrender_form";
     private $conn;
 
     public function __construct(){
@@ -15,20 +20,38 @@
         echo "connection Failed" . $e -> getMessage();
       }
     }
+	  
+	public function mapped_implode($glue, $array, $symbol = '=') {
+    return implode($glue, array_map(
+            function($k, $v) use($symbol) {
+                return $k . $symbol . $v;
+            },
+            array_keys($array),
+            array_values($array)
+            )
+        );
+}
 
     // TODO: insert the data
     public function insert(){
       if (isset($_POST['submit'] )) {
-        // code...
         if (isset($_POST['email']) && isset($_POST['textarea']) ) {
-          // code...
           if (!empty($_POST['email']) && !empty($_POST['textarea'])) {
-            // code...
-            $email = $_POST['email'];
-            $textarea = $_POST['textarea'];
-            $lenth = strlen($textarea);
+          $email = $_POST['email'];
+          $textarea = $_POST['textarea'];
+          $str = $textarea;
+          $counts = preg_split("/([^[:alnum:]]|['-])+/us", $str); 
+          $counts = array_unique($counts);
+          $arr = array();
+          foreach($counts as $count)
+          {
+              $arr[$count] = substr_count($str, $count);
+          }
+          arsort($arr);
+          
+		  $words =$this->mapped_implode("<br>",$arr);
 
-            $query ="INSERT INTO records (email,textarea,chars) VALUES ('$email','$textarea','$lenth')";
+            $query ="INSERT INTO records (email,textarea,words) VALUES ('$email','$textarea','$words')";
 
             if ($sql = $this->conn -> exec($query)) {
               // code...
